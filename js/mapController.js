@@ -8,12 +8,9 @@ var marker;
 mapService.getLocs()
     .then(locs => console.log('locs', locs))
 
-    console.log(new URLSearchParams('https://matancris.github.io/travelTip/index.html?&lat=31.843681143459943&lng=34.87148155128796').get('lat'))
 window.onload = () => {
     var lat = new URLSearchParams(window.location.href).get('lat')
-    console.log("window.onload -> lat", window.location.href)
     var lng = new URLSearchParams(window.location.href).get('lng')
-    console.log("window.onload -> lng", lng)
     if (!lat && !lng) {
         lat = 32.0749831
         lng = 34.9120554
@@ -217,10 +214,4 @@ function copyLocation() {
         }, function () {
             return 'failed';
         });
-    // document.execCommand("copy")
-}
-
-function onGetCopiedLocation() {
-    var lan = new URLSearchParams('lat=latitude&lng=longitude').get('lat')
-    var lng = new URLSearchParams('lat=latitude&lng=longitude').get('lng')
 }
