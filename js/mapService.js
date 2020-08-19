@@ -5,15 +5,15 @@ export const mapService = {
     getPlaces,
     deletePlace,
     makeId,
-    removeFromStorage,
     createLocation,
-    getGeocode
+    getGeocode,
+    // getWeather
 }
 
 const KEY_PLACES = 'places';
-const geocodeApi = 'https://developers.google.com/maps/documentation/geocoding/start'
+const API_KEY = 'AIzaSyD1ec5ZBq44fHgj80BHM1nri4zCteC8bRs';
+const API_KEY_WEATHER = '4c4c9086df5dd45af57429240b91bbdf'
 var gPlaces;
-
 
 function saveLocations(place) {
     var places = loadFromStorage(KEY_PLACES);
@@ -41,6 +41,8 @@ function getPlaces() {
 
 //TODO: check if working 
 function deletePlace(placeId) {
+    console.log("deletePlace -> placeId", placeId)
+
     var placeIdx = gPlaces.findIndex(function (place) {
         return placeId === place.id;
     })
@@ -58,11 +60,6 @@ function loadFromStorage(key) {
     var str = localStorage.getItem(key);
     var val = JSON.parse(str)
     return val;
-}
-
-
-function removeFromStorage(key) {
-    localStorage.removeItem(key);
 }
 
 
@@ -85,10 +82,14 @@ function createLocation(lat, lng, name) {
     }
 }
 
-const API_KEY = 'AIzaSyD1ec5ZBq44fHgj80BHM1nri4zCteC8bRs';
 
 function getGeocode(place) {
     return axios.get(`https://maps.googleapis.com/maps/api/geocode/json?address=${place}&key=${API_KEY}`)
         .then(res => res.data)
 }
-// https://maps.googleapis.com/maps/api/geocode/json?address=tokyo&key=AIzaSyD1ec5ZBq44fHgj80BHM1nri4zCteC8bRs
+
+
+// function getWeather(lat, lng){
+//     return axios.get(`http://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lng}&APPID=${API_KEY_WEATHER}`)
+//      .then(res =>console.log(res))
+// }

@@ -8,20 +8,22 @@ var marker;
 mapService.getLocs()
     .then(locs => console.log('locs', locs))
 
-
 window.onload = () => {
-    initMap()
+    var lat = new URLSearchParams(window.location.href).get('lat')
+    var lng = new URLSearchParams(window.location.href).get('lng')
+    if (!lat && !lng) {
+        lat = 32.0749831
+        lng = 34.9120554
+    }
+    initMap(+lat, +lng)
         .then(() => {
-            addMarker({ lat: 32.0749831, lng: 34.9120554 });
+            addMarker({ lat: +lat, lng: +lng });
             renderLocationsList();
-            onMapClick();
-            onMyLocationClick();
             mapService.getGeocode();
-            onSearch();
         })
-        // .then(() => {
-        //     onRemoveLocation();
-        // })
+        .then(() => {
+            addEvenetListeners();
+        })
         .catch(console.log('INIT MAP ERROR'));
 
     getPosition()
@@ -74,6 +76,13 @@ function _connectGoogleApi() {
     })
 }
 
+function addEvenetListeners() {
+    onMapClick();
+    onMyLocationClick();
+    onCopyLocation();
+    onSearch();
+    onRemoveLocation();
+}
 
 function onMapClick() {
     map.addListener('click', onGetPosition);
@@ -100,6 +109,7 @@ function goToLocation(lat, lng) {
     marker.setMap(null);
     panTo(lat, lng);
     addMarker({ lat, lng });
+    // renderWeather(lat, lng);
 }
 
 function openModal() {
@@ -125,7 +135,6 @@ function getPosition() {
 
 function renderLocationsList() {
     var places = mapService.getPlaces();
-    console.log(places);
     if (!places) return;
     var strHtmls = places.map(function (place) {
         return `<tr>
@@ -133,10 +142,12 @@ function renderLocationsList() {
         <td class="cell">${place.name}</td>
         <td class="cell">${place.lat.toFixed(2)} | ${place.lng.toFixed(2)}</td>
         <td class="cell cell-delete"><button data-id= "${place.id}" class="remove-btn">Delete</button></td>
-        <td class="cell"><button class="go-btn">Go</button></td>
+        <td class="cell"><button data-lat= "${place.lat}" data-lng= "${place.lng}" class="go-btn">Go</button></td>
     </tr>`
     })
     document.querySelector('.locations-container tbody').innerHTML = strHtmls.join('');
+    onRemoveLocation();
+    onGo();
 }
 
 
@@ -175,21 +186,56 @@ function searchPlace() {
             var lat = placeData.results[0].geometry.location['lat'];
             var lng = placeData.results[0].geometry.location['lng'];
             var location = mapService.createLocation(lat, lng, addressName);
-            goToLocation(lat, lng)
+            goToLocation(lat, lng);
             mapService.saveLocations(location);
             renderLocationsList();
+            document.querySelector('.my-search').value = '';
         })
 }
 
-
 function onRemoveLocation() {
-    // var elBtnRemove = document.querySelector('.cell-delete');
-    // if (!elBtnRemove) return;
-    document.querySelectorAll('.cell-delete').onclick = function (ev) {
-        if (!ev.target.dataset.id) return;
-        const placeId = ev.target.dataset.id;
-        mapService.deletePlace(placeId);
-        renderLocationsList();
-    }
+    var elBtns = document.querySelectorAll('.remove-btn');
+    elBtns.forEach(btn => {
+        btn.onclick = function (ev) {
+            // if (!ev.target.dataset.id) return;
+            const placeId = ev.target.dataset.id;
+            mapService.deletePlace(placeId);
+            renderLocationsList();
+        }
+    })
 }
 
+function onGo() {
+    var elBtns = document.querySelectorAll('.go-btn');
+    elBtns.forEach(btn => {
+        btn.onclick = function (ev) {
+            const placeLat = ev.target.dataset.lat;
+            const placeLng = ev.target.dataset.lng;
+            goToLocation(+placeLat, +placeLng)
+        }
+    })
+}
+
+
+function onCopyLocation() {
+    var elCopyLocationBtn = document.querySelector('.copy-btn');
+    elCopyLocationBtn.addEventListener('click', copyLocation);
+}
+
+function copyLocation() {
+    var places = mapService.getPlaces();
+    if (!places) return;
+    var copyText = `https://matancris.github.io/travelTip/index.html?&lat=${places[places.length - 1].lat}&lng=${places[places.length - 1].lng}`
+    navigator.clipboard.writeText(copyText)
+        .then(() => {
+            return copyText;
+        }, function () {
+            return 'failed';
+        });
+}
+
+
+// function renderWeather(lat, lng) {
+//     mapService.getWeather(lat,lng)
+//      .then(ans=> console.log(ans));
+// }
