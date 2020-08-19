@@ -11,7 +11,7 @@ mapService.getLocs()
 
 window.onload = () => {
     var lat = new URLSearchParams(window.location.href).get('lat')
-    console.log("window.onload -> lat", lat)
+    console.log("window.onload -> lat", window.location)
     var lng = new URLSearchParams(window.location.href).get('lng')
     console.log("window.onload -> lng", lng)
     if (lat === 'latitude' || lng === 'longitude') {
