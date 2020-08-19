@@ -10,9 +10,15 @@ mapService.getLocs()
 
 
 window.onload = () => {
-    initMap()
+    var lat = new URLSearchParams('lat=latitude&lng=longitude').get('lat')
+    var lng = new URLSearchParams('lat=latitude&lng=longitude').get('lng')
+    if (lat === 'latitude' || lng === 'longitude') {
+        lat = 32.0749831
+        lng = 34.9120554
+    }
+    initMap(+lat,+lng)
         .then(() => {
-            addMarker({ lat: 32.0749831, lng: 34.9120554 });
+            addMarker({ lat: +lat, lng: +lng });
             onMapClick();
             onMyLocationClick();
             renderLocationList()
@@ -199,10 +205,10 @@ function onCopyLocation() {
     var elCopyLocationBtn = document.querySelector('.copy-btn');
     elCopyLocationBtn.addEventListener('click', copyLocation);
 }
-
 function copyLocation() {
     var places = mapService.getPlaces();
-    var copyText = `https://github.com/matancris/travelTip/index.html?lat=${places[places.length - 1].lat}&lng=${places[places.length - 1].lng}`
+    if (!places) return;
+    var copyText = `https://matancris.github.io/travelTip//index.html?lat=${places[places.length - 1].lat}&lng=${places[places.length - 1].lng}`
     navigator.clipboard.writeText(copyText)
         .then(() => {
             return copyText;
@@ -210,4 +216,9 @@ function copyLocation() {
             return 'failed';
         });
     // document.execCommand("copy")
+}
+
+function onGetCopiedLocation() {
+    var lan = new URLSearchParams('lat=latitude&lng=longitude').get('lat')
+    var lng = new URLSearchParams('lat=latitude&lng=longitude').get('lng')
 }
