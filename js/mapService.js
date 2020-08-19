@@ -4,7 +4,9 @@ export const mapService = {
     saveLocations,
     getPlaces,
     deletePlace,
-    updatePlaces
+    makeId,
+    removeFromStorage,
+    createLocation
 }
 
 const KEY_PLACES = 'places';
@@ -21,6 +23,7 @@ function saveLocations(place) {
     places.push(place);
     gPlaces = places;
     saveToStorage(KEY_PLACES, places);
+    console.log(gPlaces);
 }
 
 var locs = [{ lat: 11.22, lng: 22.11 }]
@@ -83,4 +86,24 @@ function loadFromStorage(key) {
 
 function removeFromStorage(key) {
     localStorage.removeItem(key);
+}
+
+
+function makeId(length=5) {
+    var txt = '';
+    var possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    for(var i=0; i < length; i++) {
+        txt += possible.charAt(Math.floor(Math.random() * possible.length));
+    }
+    return txt;
+}
+
+function createLocation(lat,lng,name){
+    return {
+        id: mapService.makeId(),
+            name,
+            lat,
+            lng,
+            createdAt: Date.now()
+    }
 }
