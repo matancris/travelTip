@@ -8,7 +8,7 @@ var marker;
 mapService.getLocs()
     .then(locs => console.log('locs', locs))
 
-
+    console.log(new URLSearchParams('https://matancris.github.io/travelTip/index.html?&lat=31.843681143459943&lng=34.87148155128796').get('lat'))
 window.onload = () => {
     var lat = new URLSearchParams(window.location.href).get('lat')
     console.log("window.onload -> lat", window.location.href)
@@ -210,7 +210,7 @@ function onCopyLocation() {
 function copyLocation() {
     var places = mapService.getPlaces();
     if (!places) return;
-    var copyText = `https://matancris.github.io/travelTip/index.html?lat=${places[places.length - 1].lat}&lng=${places[places.length - 1].lng}`
+    var copyText = `https://matancris.github.io/travelTip/index.html?&lat=${places[places.length - 1].lat}&lng=${places[places.length - 1].lng}`
     navigator.clipboard.writeText(copyText)
         .then(() => {
             return copyText;
