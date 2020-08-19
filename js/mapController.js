@@ -18,7 +18,7 @@ window.onload = () => {
         lat = 32.0749831
         lng = 34.9120554
     }
-    initMap(lat,lng)
+    initMap(+lat, +lng)
         .then(() => {
             addMarker({ lat: +lat, lng: +lng });
             onMapClick();
