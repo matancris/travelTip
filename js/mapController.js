@@ -16,6 +16,7 @@ window.onload = () => {
             onMapClick();
             onMyLocationClick();
             renderLocationList()
+            onCopyLocation()
             // onSearch();
         })
         .catch(console.log('INIT MAP ERROR'));
@@ -83,10 +84,10 @@ function onGetPosition(event) {
     var lat = event.latLng.lat();
     var lng = event.latLng.lng();
     var elBtnSave = document.querySelector('.btn-save');
-    elBtnSave.onclick = function(){
+    elBtnSave.onclick = function () {
         var elLocationName = document.querySelector(".location-name").value;
         if (!elLocationName) return;
-        var location = mapService.createLocation(lat,lng,elLocationName);
+        var location = mapService.createLocation(lat, lng, elLocationName);
         marker.setMap(null);
         addMarker({ lat: location.lat, lng: location.lng });
         panTo(location.lat, location.lng);
@@ -192,3 +193,21 @@ function showLocation(position) {
 // https://github.io/me/travelTip/index.html?lat=3.14&lng=1.63
 // b. When app loads it looks into the query string params and if there are
 // lat/lng params (see here), it will display accordingly.
+
+
+function onCopyLocation() {
+    var elCopyLocationBtn = document.querySelector('.copy-btn');
+    elCopyLocationBtn.addEventListener('click', copyLocation);
+}
+
+function copyLocation() {
+    var places = mapService.getPlaces();
+    var copyText = `https://github.com/matancris/travelTip/index.html?lat=${places[places.length - 1].lat}&lng=${places[places.length - 1].lng}`
+    navigator.clipboard.writeText(copyText)
+        .then(() => {
+            return copyText;
+        }, function () {
+            return 'failed';
+        });
+    // document.execCommand("copy")
+}

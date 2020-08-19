@@ -11,12 +11,7 @@ export const mapService = {
 
 const KEY_PLACES = 'places';
 var gPlaces;
-var p = [{
-    id: 111,
-    name: 'Hila',
-    lat: 32,
-    lng: 32
-}]
+
 function saveLocations(place) {
     var places = loadFromStorage(KEY_PLACES);
     if (!places) places = [];
@@ -37,14 +32,13 @@ function getLocs() {
 }
 
 function getPlaces() {
-    // var places = loadFromStorage(KEY_PLACES);
-    // if (!places) places = []
-    return p;
+
+    return gPlaces;
 }
 
 function updatePlaces(pos) {
     console.log("updatePlaces -> pos", pos)
-    p.push(createPlace(pos))
+    gPlaces.push(createPlace(pos))
 }
 
 function createPlace(pos) {
