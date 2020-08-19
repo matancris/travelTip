@@ -6,24 +6,21 @@ export const mapService = {
     deletePlace,
     makeId,
     removeFromStorage,
-    createLocation
+    createLocation,
+    getGeocode
 }
 
 const KEY_PLACES = 'places';
+const geocodeApi = 'https://developers.google.com/maps/documentation/geocoding/start'
 var gPlaces;
-var p = [{
-    id: 111,
-    name: 'Hila',
-    lat: 32,
-    lng: 32
-}]
+
+
 function saveLocations(place) {
     var places = loadFromStorage(KEY_PLACES);
     if (!places) places = [];
     places.push(place);
     gPlaces = places;
     saveToStorage(KEY_PLACES, places);
-    console.log(gPlaces);
 }
 
 var locs = [{ lat: 11.22, lng: 22.11 }]
@@ -37,26 +34,8 @@ function getLocs() {
 }
 
 function getPlaces() {
-    // var places = loadFromStorage(KEY_PLACES);
-    // if (!places) places = []
-    return p;
-}
-
-function updatePlaces(pos) {
-    console.log("updatePlaces -> pos", pos)
-    p.push(createPlace(pos))
-}
-
-function createPlace(pos) {
-    let place = {
-        id: 111,
-        name: 'Hila',
-        lat: pos.lat,
-        lng: pos.lng
-    }
-    console.log(place);
-    return place;
-
+    gPlaces = loadFromStorage(KEY_PLACES);
+    return gPlaces;
 }
 
 
@@ -68,8 +47,6 @@ function deletePlace(placeId) {
     gPlaces.splice(placeIdx, 1);
     saveToStorage(KEY_PLACES, gPlaces);
 }
-
-
 
 
 function saveToStorage(key, val) {
@@ -89,21 +66,29 @@ function removeFromStorage(key) {
 }
 
 
-function makeId(length=5) {
+function makeId(length = 5) {
     var txt = '';
     var possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-    for(var i=0; i < length; i++) {
+    for (var i = 0; i < length; i++) {
         txt += possible.charAt(Math.floor(Math.random() * possible.length));
     }
     return txt;
 }
 
-function createLocation(lat,lng,name){
+function createLocation(lat, lng, name) {
     return {
         id: mapService.makeId(),
-            name,
-            lat,
-            lng,
-            createdAt: Date.now()
+        name,
+        lat,
+        lng,
+        createdAt: Date.now()
     }
 }
+
+const API_KEY = 'AIzaSyD1ec5ZBq44fHgj80BHM1nri4zCteC8bRs';
+
+function getGeocode(place) {
+    return axios.get(`https://maps.googleapis.com/maps/api/geocode/json?address=${place}&key=${API_KEY}`)
+        .then(res => res.data)
+}
+// https://maps.googleapis.com/maps/api/geocode/json?address=tokyo&key=AIzaSyD1ec5ZBq44fHgj80BHM1nri4zCteC8bRs

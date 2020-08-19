@@ -13,11 +13,15 @@ window.onload = () => {
     initMap()
         .then(() => {
             addMarker({ lat: 32.0749831, lng: 34.9120554 });
+            renderLocationsList();
             onMapClick();
             onMyLocationClick();
-            renderLocationList()
-            // onSearch();
+            mapService.getGeocode();
+            onSearch();
         })
+        // .then(() => {
+        //     onRemoveLocation();
+        // })
         .catch(console.log('INIT MAP ERROR'));
 
     getPosition()
@@ -43,7 +47,6 @@ function initMap(lat = 32.0749831, lng = 34.9120554) {
 
 
 function addMarker(loc) {
-    // console.log('in add marker' ,loc);
     marker = new google.maps.Marker({
         position: loc,
         map: map,
@@ -73,30 +76,31 @@ function _connectGoogleApi() {
 
 
 function onMapClick() {
-    map.addListener('click', onGetPosition)
-
+    map.addListener('click', onGetPosition);
 }
-
 
 function onGetPosition(event) {
     openModal();
     var lat = event.latLng.lat();
     var lng = event.latLng.lng();
+    goToLocation(lat, lng);
     var elBtnSave = document.querySelector('.btn-save');
-    elBtnSave.onclick = function(){
+    elBtnSave.onclick = function () {
         var elLocationName = document.querySelector(".location-name").value;
         if (!elLocationName) return;
-        var location = mapService.createLocation(lat,lng,elLocationName);
-        marker.setMap(null);
-        addMarker({ lat: location.lat, lng: location.lng });
-        panTo(location.lat, location.lng);
+        var location = mapService.createLocation(lat, lng, elLocationName);
         mapService.saveLocations(location);
         document.querySelector(".location-name").value = '';
         closeModal();
-        renderLocationList();
+        renderLocationsList();
     }
 }
 
+function goToLocation(lat, lng) {
+    marker.setMap(null);
+    panTo(lat, lng);
+    addMarker({ lat, lng });
+}
 
 function openModal() {
     var elModal = document.querySelector('.modal');
@@ -119,29 +123,20 @@ function getPosition() {
     })
 }
 
-
-function renderLocationList() {
+function renderLocationsList() {
     var places = mapService.getPlaces();
+    console.log(places);
     if (!places) return;
-    //TODO: RENDER THE RELEVNAT DATA and add button go- pan the map in the position -MATAN
     var strHtmls = places.map(function (place) {
         return `<tr>
         <td class="cell">${place.id}</td>
         <td class="cell">${place.name}</td>
         <td class="cell">${place.lat.toFixed(2)} | ${place.lng.toFixed(2)}</td>
-        <td class="cell"><button class="remove-btn">Delete</button></td>
+        <td class="cell cell-delete"><button data-id= "${place.id}" class="remove-btn">Delete</button></td>
         <td class="cell"><button class="go-btn">Go</button></td>
     </tr>`
     })
-    document.querySelector('.locations-container tbody').innerHTML = strHtmls.join('')
-}
-
-// onclick="onRemove('${place.id}')
-
-//TODO:CHECK IF WORKING -HILLA
-function onRemove(placeId) {
-    mapService.deletePlace(placeId);
-    renderLocationList();
+    document.querySelector('.locations-container tbody').innerHTML = strHtmls.join('');
 }
 
 
@@ -155,7 +150,6 @@ function getMyLocation() {
         .then(myLocation => {
             showLocation(myLocation)
             var pos = { lat: myLocation.coords.latitude, lng: myLocation.coords.longitude };
-            //TODO: CHECK WHAT IS THE BUG -MATAN
             marker.setMap(null);
             addMarker(pos);
         })
@@ -168,27 +162,34 @@ function showLocation(position) {
 }
 
 
+function onSearch() {
+    var elBtnSearch = document.querySelector('.search-btn');
+    elBtnSearch.addEventListener('click', searchPlace);
+}
 
-// // TODO - HILLA
-// Implement search: user enters an address (such as Tokyo) use the google
-// Geocode API to turn it into cords (such as: {lat: 35.62, lng:139.79})
-// pan the map and also add it as new location.
+function searchPlace() {
+    var elSearch = document.querySelector('.my-search').value;
+    mapService.getGeocode(elSearch)
+        .then(placeData => {
+            var addressName = placeData.results[0].formatted_address;
+            var lat = placeData.results[0].geometry.location['lat'];
+            var lng = placeData.results[0].geometry.location['lng'];
+            var location = mapService.createLocation(lat, lng, addressName);
+            goToLocation(lat, lng)
+            mapService.saveLocations(location);
+            renderLocationsList();
+        })
+}
 
-// function onSearch(){
-//     var elBtnSearch = document.querySelector('.serach-btn');
-//     elBtnSearch.addEventListener('click',
-// }
 
+function onRemoveLocation() {
+    // var elBtnRemove = document.querySelector('.cell-delete');
+    // if (!elBtnRemove) return;
+    document.querySelectorAll('.cell-delete').onclick = function (ev) {
+        if (!ev.target.dataset.id) return;
+        const placeId = ev.target.dataset.id;
+        mapService.deletePlace(placeId);
+        renderLocationsList();
+    }
+}
 
-
-
-//TODO -MATAN
-// Create a ‘copy link’ button that saves a link to the clipboard. The link
-// will be to your application (URL for GitHub pages) with the Lat and Lng
-// params. When opening the link your proj should open a map showing the
-// location according to the lat/lng from the query string parameters.
-// a. This app should be deployed to github-pages, so the URL should be
-// something like:
-// https://github.io/me/travelTip/index.html?lat=3.14&lng=1.63
-// b. When app loads it looks into the query string params and if there are
-// lat/lng params (see here), it will display accordingly.
