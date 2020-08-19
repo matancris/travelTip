@@ -1,16 +1,38 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="css/style.css">
     <title>ES6</title>
 </head>
+
 <body>
-    <h1>ES6</h1>
-    <h2>Hilla and Matan</h2>
-    <div id="map" style="width: 100%; height: 400px;"></div>
+
+    <header class="flex space-between">
+        <h1>TravelTip</h1>
+        <div class="search-container flex align-center">
+            <input type="search" placeholder="Enter location">
+            <button class="serach-btn">Go</button>
+            <button class="serach-btn">My Location</button>
+        </div>
+    </header>
+
+<main>
+
+    <h2 class="location-viewer">Location</h2>
+    <button class="copy-btn">Copy Location</button>
+
+    <div class="travel-details">
+        <div class="weather"> Weather</div>
+        <div class="locations-container">Locations</div>
+        <div class="map" id="map" style="width: 100%; height: 400px;"></div>
+    </div>
     <button class="btn">Click Me</button>
-    <h3>hilaaaaaaa</h3>
+</main>
+
     <script type="module" src="js/main.js"></script>
 </body>
+
 </html>
