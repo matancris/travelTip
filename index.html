@@ -15,24 +15,40 @@
         <div class="search-container flex align-center">
             <input type="search" placeholder="Enter location">
             <button class="serach-btn">Go</button>
-            <button class="serach-btn">My Location</button>
+            <button class="my-location-btn">My Location</button>
         </div>
     </header>
 
-<main>
+    <main>
 
-    <h2 class="location-viewer">Location</h2>
-    <button class="copy-btn">Copy Location</button>
+        <h2 class="location-viewer">Location</h2>
+        <button class="copy-btn">Copy Location</button>
 
-    <div class="travel-details">
-        <div class="weather"> Weather</div>
-        <div class="locations-container">Locations</div>
-        <div class="map" id="map" style="width: 100%; height: 400px;"></div>
-    </div>
-    <button class="btn">Click Me</button>
-</main>
+        <div class="travel-details">
+            <div class="weather"> Weather</div>
+            <div class="locations-container">Locations
+                <table>
+                    <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Name</th>
+                                <th>Position</th>
+                                <!-- <th>Longitude</th> -->
+                                <th>Actions</th>
+                            </tr>
+                    </thead>
+                    <tbody>
+                        <!-- js render -->
+                    </tbody>
+                </table>
 
-    <script type="module" src="js/main.js"></script>
+            </div>
+            <div class="map" id="map" style="width: 100%; height: 400px;"></div>
+        </div>
+        <button class="btn">Click Me</button>
+    </main>
+
+    <script type="module" src="js/mapController.js"></script>
 </body>
 
 </html>
