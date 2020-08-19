@@ -1,14 +1,6 @@
 
 import { mapService } from './mapService.js'
 
-
-// export const mapService = {
-//     initMap,
-//     addMarker,
-//     panTo,
-//     addClick
-// }
-
 var map;
 var marker;
 
@@ -23,6 +15,7 @@ window.onload = () => {
             addMarker({ lat: 32.0749831, lng: 34.9120554 });
             onMapClick();
             onMyLocationClick();
+            // onSearch();
         })
         .catch(console.log('INIT MAP ERROR'));
 
@@ -49,7 +42,7 @@ function initMap(lat = 32.0749831, lng = 34.9120554) {
 
 
 function addMarker(loc) {
-    console.log('in add marker' ,loc);
+    // console.log('in add marker' ,loc);
     marker = new google.maps.Marker({
         position: loc,
         map: map,
@@ -82,13 +75,35 @@ function onMapClick() {
     map.addListener('click', onGetPosition)
 }
 
+
 function onGetPosition(event) {
-    var loc = { lat: event.latLng.lat(), lng: event.latLng.lng() }
-    panTo(loc.lat, loc.lng);
-    marker.setMap(null);
-    addMarker(loc);
-    //TODO: add all the relevant data {id, name, lat, lng, weather, createdAt, updatedAt} -HILLA
-    mapService.saveLocations(loc);
+    openModal();
+    var lat = event.latLng.lat();
+    var lng = event.latLng.lng();
+    var elBtnSave = document.querySelector('.btn-save');
+    elBtnSave.onclick = function(){
+        var elLocationName = document.querySelector(".location-name").value;
+        if (!elLocationName) return;
+        var location = mapService.createLocation(lat,lng,elLocationName);
+        marker.setMap(null);
+        addMarker({ lat: location.lat, lng: location.lng });
+        panTo(location.lat, location.lng);
+        mapService.saveLocations(location);
+        document.querySelector(".location-name").value = '';
+        closeModal();
+        renderLocationList();
+    }
+}
+
+
+function openModal() {
+    var elModal = document.querySelector('.modal');
+    elModal.hidden = false;
+}
+
+function closeModal() {
+    var elModal = document.querySelector('.modal');
+    elModal.hidden = true;
 }
 
 
@@ -105,7 +120,7 @@ function getPosition() {
 
 function renderLocationList() {
     var places = mapService.getPlaces();
-    if (!places) return; 
+    if (!places) return;
     //TODO: RENDER THE RELEVNAT DATA and add button go- pan the map in the position -MATAN
     // var strHtmls = places.map(function (place) {
     //     return `<tr>
@@ -125,11 +140,6 @@ function onRemove(placeId) {
 }
 
 
-
-function onLocation() {
-    getPosition();
-}
-
 function onMyLocationClick() {
     var elBtnMyLocation = document.querySelector('.my-location-btn');
     elBtnMyLocation.addEventListener('click', getMyLocation);
@@ -139,13 +149,14 @@ function getMyLocation() {
     getPosition()
         .then(myLocation => {
             showLocation(myLocation)
-            var pos = {lat:myLocation.coords.latitude, lng: myLocation.coords.longitude};
+            var pos = { lat: myLocation.coords.latitude, lng: myLocation.coords.longitude };
             //TODO: CHECK WHAT IS THE BUG -MATAN
             marker.setMap(null);
             addMarker(pos);
-            // console.log(pos);
         })
 }
+
+
 
 
 function showLocation(position) {
@@ -155,10 +166,15 @@ function showLocation(position) {
 
 
 
-//TODO - HILLA
+// // TODO - HILLA
 // Implement search: user enters an address (such as Tokyo) use the google
 // Geocode API to turn it into cords (such as: {lat: 35.62, lng:139.79})
 // pan the map and also add it as new location.
+
+// function onSearch(){
+//     var elBtnSearch = document.querySelector('.serach-btn');
+//     elBtnSearch.addEventListener('click',
+// }
 
 
 

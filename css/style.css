@@ -55,3 +55,9 @@ input {
 .align-center {
     align-items: center;
 }
+
+.location-name{
+    height: 30px;
+    width: 120px;
+    border-radius: 2px;
+}
