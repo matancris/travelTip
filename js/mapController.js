@@ -210,7 +210,7 @@ function onCopyLocation() {
 function copyLocation() {
     var places = mapService.getPlaces();
     if (!places) return;
-    var copyText = `https://matancris.github.io/travelTip/index.html?lat=${places[places.length - 1].lat}&lng=${places[places.length - 1].lng}`
+    var copyText = `https://matancris.github.io/travelTip/index.html&lat=${places[places.length - 1].lat}&lng=${places[places.length - 1].lng}`
     navigator.clipboard.writeText(copyText)
         .then(() => {
             return copyText;
