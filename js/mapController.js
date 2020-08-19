@@ -10,15 +10,15 @@ mapService.getLocs()
 
 
 window.onload = () => {
-    var lat = new URLSearchParams('lat=latitude&lng=longitude').get('lat')
+    var lat = new URLSearchParams(window.location.href).get('lat')
     console.log("window.onload -> lat", lat)
-    var lng = new URLSearchParams('lat=latitude&lng=longitude').get('lng')
+    var lng = new URLSearchParams(window.location.href).get('lng')
     console.log("window.onload -> lng", lng)
     if (lat === 'latitude' || lng === 'longitude') {
         lat = 32.0749831
         lng = 34.9120554
     }
-    initMap(+lat,+lng)
+    initMap(lat,lng)
         .then(() => {
             addMarker({ lat: +lat, lng: +lng });
             onMapClick();
