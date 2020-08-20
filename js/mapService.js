@@ -5,11 +5,14 @@ export const mapService = {
     getPlaces,
     deletePlace,
     makeId,
-    removeFromStorage,
-    createLocation
+    createLocation,
+    getGeocode,
+    // getWeather
 }
 
 const KEY_PLACES = 'places';
+const API_KEY = 'AIzaSyD1ec5ZBq44fHgj80BHM1nri4zCteC8bRs';
+const API_KEY_WEATHER = '4c4c9086df5dd45af57429240b91bbdf'
 var gPlaces;
 
 function saveLocations(place) {
@@ -18,7 +21,6 @@ function saveLocations(place) {
     places.push(place);
     gPlaces = places;
     saveToStorage(KEY_PLACES, places);
-    console.log(gPlaces);
 }
 
 var locs = [{ lat: 11.22, lng: 22.11 }]
@@ -32,38 +34,21 @@ function getLocs() {
 }
 
 function getPlaces() {
-
+    gPlaces = loadFromStorage(KEY_PLACES);
     return gPlaces;
-}
-
-function updatePlaces(pos) {
-    console.log("updatePlaces -> pos", pos)
-    gPlaces.push(createPlace(pos))
-}
-
-function createPlace(pos) {
-    let place = {
-        id: 111,
-        name: 'Hila',
-        lat: pos.lat,
-        lng: pos.lng
-    }
-    console.log(place);
-    return place;
-
 }
 
 
 //TODO: check if working 
 function deletePlace(placeId) {
+    console.log("deletePlace -> placeId", placeId)
+
     var placeIdx = gPlaces.findIndex(function (place) {
         return placeId === place.id;
     })
     gPlaces.splice(placeIdx, 1);
     saveToStorage(KEY_PLACES, gPlaces);
 }
-
-
 
 
 function saveToStorage(key, val) {
@@ -78,26 +63,33 @@ function loadFromStorage(key) {
 }
 
 
-function removeFromStorage(key) {
-    localStorage.removeItem(key);
-}
-
-
-function makeId(length=5) {
+function makeId(length = 5) {
     var txt = '';
     var possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-    for(var i=0; i < length; i++) {
+    for (var i = 0; i < length; i++) {
         txt += possible.charAt(Math.floor(Math.random() * possible.length));
     }
     return txt;
 }
 
-function createLocation(lat,lng,name){
+function createLocation(lat, lng, name) {
     return {
         id: mapService.makeId(),
-            name,
-            lat,
-            lng,
-            createdAt: Date.now()
+        name,
+        lat,
+        lng,
+        createdAt: Date.now()
     }
 }
+
+
+function getGeocode(place) {
+    return axios.get(`https://maps.googleapis.com/maps/api/geocode/json?address=${place}&key=${API_KEY}`)
+        .then(res => res.data)
+}
+
+
+// function getWeather(lat, lng){
+//     return axios.get(`http://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lng}&APPID=${API_KEY_WEATHER}`)
+//      .then(res =>console.log(res))
+// }
