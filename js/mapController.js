@@ -109,7 +109,7 @@ function goToLocation(lat, lng) {
     marker.setMap(null);
     panTo(lat, lng);
     addMarker({ lat, lng });
-    // renderWeather(lat, lng);
+    renderWeather(lat, lng);
 }
 
 function openModal() {
@@ -235,7 +235,17 @@ function copyLocation() {
 }
 
 
-// function renderWeather(lat, lng) {
-//     mapService.getWeather(lat,lng)
-//      .then(ans=> console.log(ans));
-// }
+function renderWeather(lat, lng) {
+    mapService.getWeather(lat, lng)
+        .then(weatherTemp => console.log(weatherTemp));
+        // <h2>Weather Today</h2>
+        //             <h4>name</h4>
+        //             <p>weather.description</p>
+        //             <p>main:
+        //                 feels_like: 298.55
+        //                 humidity: 73
+        //                 pressure: 1005
+        //                 temp: 297.43
+        //                 temp_max: 297.59
+        //                 temp_min: 297.15</p>
+}

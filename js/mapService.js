@@ -7,12 +7,12 @@ export const mapService = {
     makeId,
     createLocation,
     getGeocode,
-    // getWeather
+    getWeather
 }
 
 const KEY_PLACES = 'places';
 const API_KEY = 'AIzaSyD1ec5ZBq44fHgj80BHM1nri4zCteC8bRs';
-const API_KEY_WEATHER = '4c4c9086df5dd45af57429240b91bbdf'
+const API_KEY_WEATHER = '90fd167d9c0be6c8579d0d40ee47e238'
 var gPlaces;
 
 function saveLocations(place) {
@@ -89,7 +89,7 @@ function getGeocode(place) {
 }
 
 
-// function getWeather(lat, lng){
-//     return axios.get(`http://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lng}&APPID=${API_KEY_WEATHER}`)
-//      .then(res =>console.log(res))
-// }
+function getWeather(lat, lng){
+    return axios.get(`http://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lng}&APPID=${API_KEY_WEATHER}`)
+     .then(res =>res.data)
+}
