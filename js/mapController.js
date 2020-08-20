@@ -124,7 +124,7 @@ function closeModal() {
 
 
 document.querySelector('.btn').addEventListener('click', (ev) => {
-    mapService.panTo(35.6895, 139.6917);
+    panTo(35.6895, 139.6917);
 })
 
 function getPosition() {

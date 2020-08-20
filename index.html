@@ -22,16 +22,16 @@
     </header>
 
     <main class="flex justify-center align-center">
-        <div class="main-container container">
+        <div class="main-container container flex column space-between">
             <div hidden class="modal">
                 <label class="input-location" for="location-name">Insert location:</label>
                 <input type="name" class="location-name" placeholder="Insert name" />
                 <button class="btn-save">Save</button>
             </div>
-
-            <h2 class="location-viewer">Location</h2>
-            <button class="copy-btn">Copy Location</button>
-
+            <div class="location-copy flex space-between">
+                <h2 class="location-viewer">Location</h2>
+                <button class="copy-btn">Copy Location</button>
+            </div>
             <div class="travel-details">
                 <div class="weather"> Weather </div>
                 <div class="locations-container">Locations
@@ -43,6 +43,7 @@
                                 <th>Position</th>
                                 <!-- <th>Longitude</th> -->
                                 <th>Actions</th>
+                                <th>Actions</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -53,7 +54,7 @@
                 </div>
                 <div class="map" id="map" style="width: 100%; height: 400px;"></div>
             </div>
-            <button class="btn">Click Me</button>
+            <!-- <button class="btn">Click Me</button> -->
         </div>
     </main>
     
