@@ -7,7 +7,7 @@ export const mapService = {
     makeId,
     createLocation,
     getGeocode,
-    // getWeather
+    getWeather
 }
 
 const KEY_PLACES = 'places';
@@ -39,10 +39,7 @@ function getPlaces() {
 }
 
 
-//TODO: check if working 
 function deletePlace(placeId) {
-    console.log("deletePlace -> placeId", placeId)
-
     var placeIdx = gPlaces.findIndex(function (place) {
         return placeId === place.id;
     })
@@ -89,7 +86,8 @@ function getGeocode(place) {
 }
 
 
-// function getWeather(lat, lng){
-//     return axios.get(`http://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lng}&APPID=${API_KEY_WEATHER}`)
-//      .then(res =>console.log(res))
-// }
+
+function getWeather(lat, lng){
+    return axios.get(`http://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lng}&APPID=${API_KEY_WEATHER}`)
+     .then(res =>res.data)
+}
