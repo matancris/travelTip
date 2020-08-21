@@ -38,6 +38,10 @@ button {
     border-radius: 5px;
 }
 
+img{
+    background-color: transparent;
+}
+
 button:hover {
     background-color: #687575d5
 }
@@ -94,7 +98,7 @@ tbody{
     display:block;
     width: 100%;
     overflow: auto;
-    height: 100px;
+    height: 140px;
   }
   
 

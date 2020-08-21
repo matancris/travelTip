@@ -6,7 +6,7 @@ var marker;
 
 
 mapService.getLocs()
-    .then(locs => console.log('locs', locs))
+// .then(locs => console.log('locs', locs))
 
 window.onload = () => {
     var lat = new URLSearchParams(window.location.href).get('lat')
@@ -52,6 +52,7 @@ function addMarker(loc) {
     marker = new google.maps.Marker({
         position: loc,
         map: map,
+        // icon:  'img/a.png',
         title: 'Hello World!'
     });
     return marker;
@@ -237,15 +238,15 @@ function copyLocation() {
 
 function renderWeather(lat, lng) {
     mapService.getWeather(lat, lng)
-        .then(weatherTemp => console.log(weatherTemp));
-        // <h2>Weather Today</h2>
-        //             <h4>name</h4>
-        //             <p>weather.description</p>
-        //             <p>main:
-        //                 feels_like: 298.55
-        //                 humidity: 73
-        //                 pressure: 1005
-        //                 temp: 297.43
-        //                 temp_max: 297.59
-        //                 temp_min: 297.15</p>
+        .then(weatherTemp => {
+            // console.log('weatherTemp,', weatherTemp)});
+            var elWeather = document.querySelector('.weather');
+            var strHTML = `
+            <h2>Weather Today</h2>
+                        <h4>${weatherTemp.name}</h4>
+                        <p>${weatherTemp.weather[0].description}</p>
+                        <p>feels_like: ${(weatherTemp.main.feels_like- 273.15).toFixed(2)} °C
+                        <p> temp: ${(weatherTemp.main.temp - 273.15).toFixed(2)} °C </p>`
+            elWeather.innerHTML = strHTML;
+        })
 }

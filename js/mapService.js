@@ -12,7 +12,7 @@ export const mapService = {
 
 const KEY_PLACES = 'places';
 const API_KEY = 'AIzaSyD1ec5ZBq44fHgj80BHM1nri4zCteC8bRs';
-const API_KEY_WEATHER = '90fd167d9c0be6c8579d0d40ee47e238'
+const API_KEY_WEATHER = '4c4c9086df5dd45af57429240b91bbdf'
 var gPlaces;
 
 function saveLocations(place) {
@@ -39,10 +39,7 @@ function getPlaces() {
 }
 
 
-//TODO: check if working 
 function deletePlace(placeId) {
-    console.log("deletePlace -> placeId", placeId)
-
     var placeIdx = gPlaces.findIndex(function (place) {
         return placeId === place.id;
     })
@@ -87,6 +84,7 @@ function getGeocode(place) {
     return axios.get(`https://maps.googleapis.com/maps/api/geocode/json?address=${place}&key=${API_KEY}`)
         .then(res => res.data)
 }
+
 
 
 function getWeather(lat, lng){
